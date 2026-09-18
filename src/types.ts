@@ -35,4 +35,4 @@ export interface HistoryItem {
 
 export type AppLanguage = 'en' | 'bn';
 export type ThemeMode = 'light' | 'dark' | 'system';
-export type ScreenRoute = 'calculator' | 'settings' | 'about_developer';
+export type ScreenRoute = 'calculator' | 'history' | 'settings' | 'about_developer';

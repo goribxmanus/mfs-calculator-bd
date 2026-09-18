@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { MfsId, AppLanguage, ThemeMode, HistoryItem, ScreenRoute } from './types';
-import { MFS_PROVIDERS, calculateMfsCharge, formatTaka } from './calculationEngine';
+import { MFS_PROVIDERS, calculateMfsCharge } from './calculationEngine';
 import { PhoneHeader } from './components/PhoneHeader';
 import { ResultCard } from './components/ResultCard';
 import { MfsSelector } from './components/MfsSelector';
@@ -8,12 +8,11 @@ import { AmountInput } from './components/AmountInput';
 import { QuickAddButtons } from './components/QuickAddButtons';
 import { NumericKeypad } from './components/NumericKeypad';
 import { ResetButton } from './components/ResetButton';
-import { HistorySection } from './components/HistorySection';
+import { HistoryView } from './components/HistoryView';
 import { SettingsModal } from './components/SettingsModal';
 import { AboutDeveloperModal } from './components/AboutDeveloperModal';
 import { AndroidProjectHub } from './components/AndroidProjectHub';
 import { Smartphone, Code, Wifi, Battery, Sparkles } from 'lucide-react';
-import confetti from 'canvas-confetti';
 
 const STORAGE_KEY_HISTORY = 'mfs_calc_history_v1';
 const STORAGE_KEY_LANG = 'mfs_calc_lang_v1';
@@ -71,10 +70,7 @@ export default function App() {
   // 6. Navigation Route
   const [currentScreen, setCurrentScreen] = useState<ScreenRoute>('calculator');
 
-  // 7. Copy State
-  const [isCopied, setIsCopied] = useState(false);
-
-  // 8. Calculation History (Room DB simulation in LocalStorage, max 100 entries)
+  // 7. Calculation History (Simulating Room DB in LocalStorage, max 100 entries)
   const [history, setHistory] = useState<HistoryItem[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_HISTORY);
@@ -140,7 +136,7 @@ export default function App() {
       if (res.amount <= 0) return;
 
       setHistory((prev) => {
-        // Prevent immediate duplicates
+        // Prevent immediate duplicate entries
         if (
           prev.length > 0 &&
           prev[0].mfsName === res.mfsName &&
@@ -161,7 +157,6 @@ export default function App() {
           timestamp: Date.now(),
         };
 
-        // Section 26: Maximum 100 calculations, newest first
         return [newItem, ...prev.slice(0, 99)];
       });
     },
@@ -172,7 +167,7 @@ export default function App() {
     if (calculationResult.amount > 0) {
       const timer = setTimeout(() => {
         commitToHistory(calculationResult);
-      }, 2000);
+      }, 1500);
       return () => clearTimeout(timer);
     }
   }, [calculationResult, commitToHistory]);
@@ -226,21 +221,6 @@ export default function App() {
     setSelectedMfsId('BKASH');
   };
 
-  const handleCopyTotal = async () => {
-    try {
-      await navigator.clipboard.writeText(calculationResult.formattedTotal);
-      setIsCopied(true);
-      commitToHistory(calculationResult);
-      confetti({
-        particleCount: 35,
-        spread: 60,
-        origin: { y: 0.7 },
-        colors: ['#00796B', '#26A69A', '#80CBC4'],
-      });
-      setTimeout(() => setIsCopied(false), 2000);
-    } catch {}
-  };
-
   const handleRestoreHistory = (item: HistoryItem) => {
     const matched = Object.values(MFS_PROVIDERS).find(
       (p) => p.name.toLowerCase() === item.mfsName.toLowerCase()
@@ -276,11 +256,11 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col items-center justify-start p-3 sm:p-6 transition-colors duration-200">
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col items-center justify-start p-3 sm:p-5 transition-colors duration-200">
       {/* Top Companion Mode Bar */}
-      <header className="w-full max-w-4xl flex items-center justify-between pb-4">
+      <header className="w-full max-w-4xl flex items-center justify-between pb-3">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-xl bg-teal-700 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+          <div className="w-8 h-8 rounded-xl bg-teal-700 flex items-center justify-center text-white font-bold text-sm shadow-xs">
             ৳
           </div>
           <div>
@@ -329,8 +309,8 @@ export default function App() {
         ) : (
           <div className="w-full flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6">
             {/* Native Android Phone Frame */}
-            <div className="w-full max-w-sm sm:w-[390px] h-[820px] bg-slate-900 rounded-[44px] p-3 shadow-2xl shadow-slate-900/30 border-4 border-slate-800 relative flex flex-col overflow-hidden shrink-0">
-              {/* Phone Speaker & Dynamic Island / Camera Notch */}
+            <div className="w-full max-w-sm sm:w-[390px] h-[780px] bg-slate-900 rounded-[44px] p-3 shadow-2xl shadow-slate-900/30 border-4 border-slate-800 relative flex flex-col overflow-hidden shrink-0">
+              {/* Phone Speaker & Camera Notch */}
               <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-50 flex items-center justify-center space-x-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-800" />
                 <div className="w-2.5 h-2.5 rounded-full bg-teal-900/40" />
@@ -350,68 +330,70 @@ export default function App() {
 
                 {/* Android Screen Container */}
                 <div className="flex-1 flex flex-col overflow-hidden relative">
-                  {/* Top App Bar with 3-Item Menu & Settings Gear */}
+                  {/* Top App Bar with Corner Menu & Settings Gear */}
                   <PhoneHeader
                     language={language}
                     onNavigateToCalculator={() => setCurrentScreen('calculator')}
+                    onNavigateToHistory={() => setCurrentScreen('history')}
                     onNavigateToAboutDeveloper={() => setCurrentScreen('about_developer')}
                     onNavigateToSettings={() => setCurrentScreen('settings')}
                     onSetLanguage={setLanguage}
                   />
 
-                  {/* Scrollable Calculator Body */}
-                  <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3.5">
-                    {/* 1. RESULT CARD (MUST BE AT THE TOP ABOVE EVERYTHING!) */}
-                    <ResultCard
-                      result={calculationResult}
-                      isCopied={isCopied}
-                      language={language}
-                      onCopy={handleCopyTotal}
-                    />
-
-                    {/* 2. MFS SELECTOR (Exactly 4: bKash, Nagad, Rocket, Upay) */}
-                    <MfsSelector
-                      selectedMfsId={selectedMfsId}
-                      language={language}
-                      onSelectMfs={setSelectedMfsId}
-                    />
-
-                    {/* 3. AMOUNT INPUT */}
-                    <AmountInput
-                      rawAmount={rawAmount}
-                      language={language}
-                      onClear={handleClearAmount}
-                    />
-
-                    {/* 4. QUICK-ADD BUTTONS (+500, +1,000, +1,500, +2,000, Clear) */}
-                    <QuickAddButtons
-                      language={language}
-                      onQuickAdd={handleQuickAdd}
-                      onClear={handleClearAmount}
-                    />
-
-                    {/* 5. CUSTOM NUMERIC KEYPAD (1-9, 00, 0, ⌫) */}
-                    <NumericKeypad
-                      onDigit={handleDigit}
-                      onDecimal={handleDecimal}
-                      onBackspace={handleBackspace}
-                    />
-
-                    {/* 6. RESET BUTTON (Clears without deleting history) */}
-                    <ResetButton language={language} onReset={handleReset} />
-
-                    {/* 7. CALCULATION HISTORY (Up to 100, newest first) */}
-                    <div className="pt-1 pb-4">
-                      <HistorySection
-                        history={history}
+                  {/* Calculator Screen: All elements fit neatly on one screen without scrolling */}
+                  {currentScreen === 'calculator' && (
+                    <div className="flex-1 flex flex-col justify-between px-3.5 py-2.5 select-none overflow-hidden">
+                      {/* 1. RESULT CARD (AT THE TOP, COMPACT, NO COPY BUTTON) */}
+                      <ResultCard
+                        result={calculationResult}
                         language={language}
-                        onRestore={handleRestoreHistory}
-                        onClearHistory={handleClearHistory}
                       />
-                    </div>
-                  </div>
 
-                  {/* Overlays: Settings Screen & About Developer Screen */}
+                      {/* 2. MFS SELECTOR (bKash, Nagad, Rocket, Upay) */}
+                      <MfsSelector
+                        selectedMfsId={selectedMfsId}
+                        language={language}
+                        onSelectMfs={setSelectedMfsId}
+                      />
+
+                      {/* 3. AMOUNT INPUT */}
+                      <AmountInput
+                        rawAmount={rawAmount}
+                        language={language}
+                        onClear={handleClearAmount}
+                      />
+
+                      {/* 4. QUICK-ADD BUTTONS (+500, +1,000, +1,500, +2,000, Clear) */}
+                      <QuickAddButtons
+                        language={language}
+                        onQuickAdd={handleQuickAdd}
+                        onClear={handleClearAmount}
+                      />
+
+                      {/* 5. CUSTOM NUMERIC KEYPAD (1-9, 00, 0, ⌫) */}
+                      <NumericKeypad
+                        onDigit={handleDigit}
+                        onDecimal={handleDecimal}
+                        onBackspace={handleBackspace}
+                      />
+
+                      {/* 6. RESET BUTTON */}
+                      <ResetButton language={language} onReset={handleReset} />
+                    </div>
+                  )}
+
+                  {/* History View (accessed via Corner Menu) */}
+                  {currentScreen === 'history' && (
+                    <HistoryView
+                      history={history}
+                      language={language}
+                      onRestore={handleRestoreHistory}
+                      onClearHistory={handleClearHistory}
+                      onBack={() => setCurrentScreen('calculator')}
+                    />
+                  )}
+
+                  {/* Settings Screen */}
                   {currentScreen === 'settings' && (
                     <SettingsModal
                       language={language}
@@ -425,6 +407,7 @@ export default function App() {
                     />
                   )}
 
+                  {/* About Developer Screen */}
                   {currentScreen === 'about_developer' && (
                     <AboutDeveloperModal
                       language={language}
@@ -459,32 +442,28 @@ export default function App() {
 
               <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
                 <span className="font-bold text-xs text-slate-900 dark:text-slate-100 block mb-2">
-                  Android Native Checklist
+                  Single-Screen Layout Updates
                 </span>
                 <ul className="text-xs text-slate-600 dark:text-slate-400 space-y-2">
                   <li className="flex items-center space-x-1.5">
                     <span className="text-emerald-500">✓</span>
-                    <span>Kotlin + Jetpack Compose</span>
+                    <span>No scroll needed: type & see results</span>
                   </li>
                   <li className="flex items-center space-x-1.5">
                     <span className="text-emerald-500">✓</span>
-                    <span>Room SQLite (max 100 history)</span>
+                    <span>Copy total button removed</span>
                   </li>
                   <li className="flex items-center space-x-1.5">
                     <span className="text-emerald-500">✓</span>
-                    <span>DataStore Preferences</span>
+                    <span>History transferred to dropdown menu</span>
                   </li>
                   <li className="flex items-center space-x-1.5">
                     <span className="text-emerald-500">✓</span>
-                    <span>English & বাংলা Localization</span>
+                    <span>Compact & balanced UI hierarchy</span>
                   </li>
                   <li className="flex items-center space-x-1.5">
                     <span className="text-emerald-500">✓</span>
-                    <span>Light, Dark & System Theme</span>
-                  </li>
-                  <li className="flex items-center space-x-1.5">
-                    <span className="text-emerald-500">✓</span>
-                    <span>Custom 00 & Backspace Keypad</span>
+                    <span>Tap any history entry to restore</span>
                   </li>
                 </ul>
               </div>

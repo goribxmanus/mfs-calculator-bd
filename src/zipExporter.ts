@@ -374,6 +374,139 @@ fun AboutDeveloperScreen(onNavigateBack: () -> Unit) {
 }`
   },
   {
+    path: 'app/src/main/java/com/mfs/chargecalculator/ui/screens/HistoryScreen.kt',
+    category: 'kotlin',
+    content: `package com.mfs.chargecalculator.ui.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.mfs.chargecalculator.R
+import com.mfs.chargecalculator.viewmodel.CalculatorViewModel
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HistoryScreen(
+    viewModel: CalculatorViewModel,
+    onNavigateBack: () -> Unit
+) {
+    val historyList by viewModel.historyList.collectAsState()
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.calculation_history)) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    if (historyList.isNotEmpty()) {
+                        IconButton(onClick = { viewModel.onClearHistory() }) {
+                            Icon(Icons.Default.Delete, contentDescription = "Clear", tint = MaterialTheme.colorScheme.error)
+                        }
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            items(historyList, key = { it.id }) { item ->
+                Card(
+                    onClick = {
+                        viewModel.onRestoreHistory(item)
+                        onNavigateBack()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(14.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("\${item.mfsName}  ৳\${item.amount}", fontWeight = FontWeight.Bold)
+                            Text("৳\${item.totalCustomerPays}", fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.primary)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}`
+  },
+  {
+    path: 'app/src/main/java/com/mfs/chargecalculator/ui/screens/MainCalculatorScreen.kt',
+    category: 'kotlin',
+    content: `package com.mfs.chargecalculator.ui.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.mfs.chargecalculator.ui.components.*
+import com.mfs.chargecalculator.viewmodel.CalculatorViewModel
+
+@Composable
+fun MainCalculatorScreen(
+    viewModel: CalculatorViewModel,
+    onNavigateToHistory: () -> Unit,
+    onNavigateToSettings: () -> Unit,
+    onNavigateToAboutDeveloper: () -> Unit
+) {
+    val rawAmount by viewModel.rawAmount.collectAsState()
+    val selectedMfsId by viewModel.selectedMfsId.collectAsState()
+    val calculationResult by viewModel.calculationResult.collectAsState()
+    val userPreferences by viewModel.userPreferences.collectAsState()
+
+    Scaffold(
+        topBar = {
+            TopAppBarWithMenu(
+                currentLanguage = userPreferences.language,
+                onNavigateToCalculator = {},
+                onNavigateToHistory = onNavigateToHistory,
+                onNavigateToAboutDeveloper = onNavigateToAboutDeveloper,
+                onNavigateToSettings = onNavigateToSettings,
+                onLanguageSelected = { viewModel.setLanguage(it) }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(horizontal = 16.dp, vertical = 6.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ResultCard(result = calculationResult)
+            MfsSelector(selectedMfsId = selectedMfsId, onSelectMfs = { viewModel.onSelectMfs(it) })
+            AmountInputField(rawAmount = rawAmount, onClear = { viewModel.onClearAmount() })
+            QuickAddButtons(onQuickAdd = { viewModel.onQuickAdd(it) }, onClear = { viewModel.onClearAmount() })
+            NumericKeypad(onDigit = { viewModel.onDigit(it) }, onDecimal = { viewModel.onDecimal() }, onBackspace = { viewModel.onBackspace() })
+            OutlinedButton(onClick = { viewModel.onReset() }, modifier = Modifier.fillMaxWidth().height(40.dp)) {
+                Text("Reset")
+            }
+        }
+    }
+}`
+  },
+  {
     path: 'app/src/test/java/com/mfs/chargecalculator/engine/MfsCalculationEngineTest.kt',
     category: 'test',
     content: `package com.mfs.chargecalculator.engine

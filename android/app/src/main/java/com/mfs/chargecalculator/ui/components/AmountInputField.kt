@@ -40,23 +40,23 @@ fun AmountInputField(
             text = stringResource(id = R.string.your_amount),
             style = MaterialTheme.typography.labelLarge.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 13.sp
+                fontSize = 12.sp
             ),
-            modifier = Modifier.padding(start = 2.dp, bottom = 6.dp)
+            modifier = Modifier.padding(start = 2.dp, bottom = 3.dp)
         )
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp)
+                .height(48.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .background(MaterialTheme.colorScheme.surface)
                 .border(
                     width = 1.dp,
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.35f),
                     shape = RoundedCornerShape(12.dp)
                 )
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 14.dp),
             contentAlignment = Alignment.CenterStart
         ) {
             Row(
@@ -70,7 +70,7 @@ fun AmountInputField(
                         style = MaterialTheme.typography.titleLarge.copy(
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp
+                            fontSize = 20.sp
                         )
                     )
                     Spacer(modifier = Modifier.size(8.dp))
@@ -83,7 +83,7 @@ fun AmountInputField(
                                 MaterialTheme.colorScheme.onSurface
                             },
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 24.sp
+                            fontSize = 20.sp
                         )
                     )
                 }

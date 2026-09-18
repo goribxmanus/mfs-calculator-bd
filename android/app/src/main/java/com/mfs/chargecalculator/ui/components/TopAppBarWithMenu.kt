@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Menu
@@ -44,6 +45,7 @@ fun TopAppBarWithMenu(
     subtitle: String = stringResource(id = R.string.app_subtitle),
     currentLanguage: AppLanguage,
     onNavigateToCalculator: () -> Unit,
+    onNavigateToHistory: () -> Unit,
     onNavigateToAboutDeveloper: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit
@@ -89,7 +91,7 @@ fun TopAppBarWithMenu(
                 )
             }
 
-            // 3-Item Corner Menu Button
+            // Corner Menu Button
             IconButton(
                 onClick = { menuExpanded = true },
                 contentDescription = "Menu"
@@ -101,7 +103,7 @@ fun TopAppBarWithMenu(
                 )
             }
 
-            // Dropdown Menu with EXACTLY three items
+            // Dropdown Menu
             DropdownMenu(
                 expanded = menuExpanded,
                 onDismissRequest = { menuExpanded = false }
@@ -118,7 +120,19 @@ fun TopAppBarWithMenu(
                     }
                 )
 
-                // Item 2: About Developer
+                // Item 2: Calculation History (Transferred to dropdown menu per user request)
+                DropdownMenuItem(
+                    text = { Text(stringResource(id = R.string.calculation_history)) },
+                    leadingIcon = {
+                        Icon(Icons.Default.History, contentDescription = null)
+                    },
+                    onClick = {
+                        menuExpanded = false
+                        onNavigateToHistory()
+                    }
+                )
+
+                // Item 3: About Developer
                 DropdownMenuItem(
                     text = { Text(stringResource(id = R.string.menu_about_developer)) },
                     leadingIcon = {
@@ -130,7 +144,7 @@ fun TopAppBarWithMenu(
                     }
                 )
 
-                // Item 3: Language / ভাষা
+                // Item 4: Language / ভাষা
                 DropdownMenuItem(
                     text = { Text(stringResource(id = R.string.menu_language)) },
                     leadingIcon = {

@@ -9,17 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,15 +31,13 @@ import com.mfs.chargecalculator.model.CalculationResult
 @Composable
 fun ResultCard(
     result: CalculationResult,
-    isCopied: Boolean,
-    onCopyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(18.dp)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+            .clip(RoundedCornerShape(16.dp)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -63,7 +54,7 @@ fun ResultCard(
                             )
                         )
                     )
-                    .padding(horizontal = 20.dp, vertical = 18.dp)
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Column {
                     Row(
@@ -75,7 +66,7 @@ fun ResultCard(
                             text = stringResource(id = R.string.total_customer_pays),
                             style = MaterialTheme.typography.labelLarge.copy(
                                 color = Color(0xFFB2DFDB),
-                                fontSize = 13.sp,
+                                fontSize = 12.sp,
                                 letterSpacing = 0.5.sp
                             )
                         )
@@ -84,20 +75,20 @@ fun ResultCard(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(6.dp))
                                 .background(Color(0xFF00332C))
-                                .padding(horizontal = 8.dp, vertical = 3.dp)
+                                .padding(horizontal = 8.dp, vertical = 2.dp)
                         ) {
                             Text(
                                 text = result.mfsName,
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = Color(0xFF80CBC4),
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 12.sp
+                                    fontSize = 11.sp
                                 )
                             )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(2.dp))
 
                     // Most Prominent Number: Total Customer Pays
                     Text(
@@ -105,7 +96,7 @@ fun ResultCard(
                         style = MaterialTheme.typography.headlineLarge.copy(
                             color = Color.White,
                             fontWeight = FontWeight.ExtraBold,
-                            fontSize = 34.sp
+                            fontSize = 28.sp
                         )
                     )
                 }
@@ -115,7 +106,7 @@ fun ResultCard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 18.dp, vertical = 14.dp)
+                    .padding(horizontal = 16.dp, vertical = 10.dp)
             ) {
                 // Row 1: Your Amount & MFS
                 Row(
@@ -133,9 +124,9 @@ fun ResultCard(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-                Divider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f))
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
+                Divider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+                Spacer(modifier = Modifier.height(6.dp))
 
                 // Row 2: Cashout Charge & Send Money Fee
                 Row(
@@ -152,39 +143,6 @@ fun ResultCard(
                         value = result.formattedSendMoneyFee,
                         valueColor = Color(0xFFD97706),
                         alignEnd = true
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(14.dp))
-
-                // Copy Total Action Button
-                Button(
-                    onClick = onCopyClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(44.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isCopied) Color(0xFF16A34A) else MaterialTheme.colorScheme.primary,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Icon(
-                        imageVector = if (isCopied) Icons.Default.Check else Icons.Default.ContentCopy,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.size(8.dp))
-                    Text(
-                        text = if (isCopied) {
-                            stringResource(id = R.string.copied)
-                        } else {
-                            stringResource(id = R.string.copy_total)
-                        },
-                        style = MaterialTheme.typography.labelLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
-                        )
                     )
                 }
             }

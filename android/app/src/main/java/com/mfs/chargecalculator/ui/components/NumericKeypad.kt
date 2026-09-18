@@ -42,7 +42,7 @@ fun NumericKeypad(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         // Row 1: 1, 2, 3
         KeypadRow {
@@ -89,7 +89,7 @@ fun NumericKeypad(
 private fun KeypadRow(content: @Composable () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         content()
     }
@@ -103,8 +103,8 @@ private fun KeypadButton(
 ) {
     Surface(
         onClick = onClick,
-        modifier = modifier.height(52.dp),
-        shape = RoundedCornerShape(12.dp),
+        modifier = modifier.height(45.dp),
+        shape = RoundedCornerShape(11.dp),
         color = MaterialTheme.colorScheme.surface,
         shadowElevation = 1.dp
     ) {
@@ -113,7 +113,7 @@ private fun KeypadButton(
                 text = text,
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 22.sp,
+                    fontSize = 20.sp,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             )
@@ -130,9 +130,9 @@ private fun KeypadZeroButton(
 ) {
     Surface(
         modifier = modifier
-            .height(52.dp)
-            .clip(RoundedCornerShape(12.dp)),
-        shape = RoundedCornerShape(12.dp),
+            .height(45.dp)
+            .clip(RoundedCornerShape(11.dp)),
+        shape = RoundedCornerShape(11.dp),
         color = MaterialTheme.colorScheme.surface,
         shadowElevation = 1.dp
     ) {
@@ -152,7 +152,7 @@ private fun KeypadZeroButton(
                     text = "0",
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = 22.sp,
+                        fontSize = 20.sp,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 )
@@ -163,7 +163,7 @@ private fun KeypadZeroButton(
                         fontWeight = FontWeight.Bold,
                         fontSize = 11.sp
                     ),
-                    modifier = Modifier.padding(bottom = 3.dp)
+                    modifier = Modifier.padding(bottom = 2.dp)
                 )
             }
         }
@@ -177,8 +177,8 @@ private fun KeypadBackspaceButton(
 ) {
     Surface(
         onClick = onBackspace,
-        modifier = modifier.height(52.dp),
-        shape = RoundedCornerShape(12.dp),
+        modifier = modifier.height(45.dp),
+        shape = RoundedCornerShape(11.dp),
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
         shadowElevation = 1.dp
     ) {
@@ -187,7 +187,7 @@ private fun KeypadBackspaceButton(
                 imageVector = Icons.AutoMirrored.Filled.Backspace,
                 contentDescription = "Backspace",
                 tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(22.dp)
+                modifier = Modifier.size(20.dp)
             )
         }
     }

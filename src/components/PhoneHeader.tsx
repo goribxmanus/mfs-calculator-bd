@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Settings, MoreVertical, Check, Globe } from 'lucide-react';
+import { Settings, MoreVertical, Check, Globe, History, Calculator, User } from 'lucide-react';
 import { AppLanguage } from '../types';
 import { t } from '../translations';
 
 interface PhoneHeaderProps {
   language: AppLanguage;
   onNavigateToCalculator: () => void;
+  onNavigateToHistory: () => void;
   onNavigateToAboutDeveloper: () => void;
   onNavigateToSettings: () => void;
   onSetLanguage: (lang: AppLanguage) => void;
@@ -14,6 +15,7 @@ interface PhoneHeaderProps {
 export const PhoneHeader: React.FC<PhoneHeaderProps> = ({
   language,
   onNavigateToCalculator,
+  onNavigateToHistory,
   onNavigateToAboutDeveloper,
   onNavigateToSettings,
   onSetLanguage,
@@ -24,7 +26,7 @@ export const PhoneHeader: React.FC<PhoneHeaderProps> = ({
   return (
     <div className="w-full relative select-none">
       {/* Android Top App Bar */}
-      <div className="px-4 py-3 flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800">
+      <div className="px-4 py-2.5 flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800">
         <div>
           <h1 className="font-bold text-base tracking-tight text-slate-900 dark:text-slate-100">
             {t(language, 'appName')}
@@ -44,7 +46,7 @@ export const PhoneHeader: React.FC<PhoneHeaderProps> = ({
             <Settings className="w-5 h-5" />
           </button>
 
-          {/* 3-Item Corner Menu Button */}
+          {/* Corner Menu Button */}
           <div className="relative">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
@@ -54,45 +56,60 @@ export const PhoneHeader: React.FC<PhoneHeaderProps> = ({
               <MoreVertical className="w-5 h-5" />
             </button>
 
-            {/* Dropdown Menu: Exactly three items */}
+            {/* Dropdown Menu */}
             {menuOpen && (
               <>
                 <div
                   className="fixed inset-0 z-40"
                   onClick={() => setMenuOpen(false)}
                 />
-                <div className="absolute right-0 top-11 w-48 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute right-0 top-11 w-52 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
                   {/* Item 1: Cashout Charge */}
                   <button
                     onClick={() => {
                       setMenuOpen(false);
                       onNavigateToCalculator();
                     }}
-                    className="w-full px-4 py-2.5 text-left text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center font-medium"
+                    className="w-full px-4 py-2.5 text-left text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center space-x-2.5 font-medium"
                   >
-                    {t(language, 'menuCashoutCharge')}
+                    <Calculator className="w-4 h-4 text-slate-500" />
+                    <span>{t(language, 'menuCashoutCharge')}</span>
                   </button>
 
-                  {/* Item 2: About Developer */}
+                  {/* Item 2: Calculation History */}
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      onNavigateToHistory();
+                    }}
+                    className="w-full px-4 py-2.5 text-left text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center space-x-2.5 font-medium"
+                  >
+                    <History className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                    <span>{t(language, 'calculationHistory')}</span>
+                  </button>
+
+                  {/* Item 3: About Developer */}
                   <button
                     onClick={() => {
                       setMenuOpen(false);
                       onNavigateToAboutDeveloper();
                     }}
-                    className="w-full px-4 py-2.5 text-left text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center font-medium"
+                    className="w-full px-4 py-2.5 text-left text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center space-x-2.5 font-medium"
                   >
-                    {t(language, 'menuAboutDeveloper')}
+                    <User className="w-4 h-4 text-slate-500" />
+                    <span>{t(language, 'menuAboutDeveloper')}</span>
                   </button>
 
-                  {/* Item 3: Language / ভাষা */}
+                  {/* Item 4: Language / ভাষা */}
                   <button
                     onClick={() => {
                       setMenuOpen(false);
                       setLangDialogOpen(true);
                     }}
-                    className="w-full px-4 py-2.5 text-left text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center font-medium"
+                    className="w-full px-4 py-2.5 text-left text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center space-x-2.5 font-medium"
                   >
-                    {t(language, 'menuLanguage')}
+                    <Globe className="w-4 h-4 text-slate-500" />
+                    <span>{t(language, 'menuLanguage')}</span>
                   </button>
                 </div>
               </>
