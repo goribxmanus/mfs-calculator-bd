@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Calculator Card -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M32,24h44c4.4,0 8,3.6 8,8v44c0,4.4 -3.6,8 -8,8H32c-4.4,0 -8,-3.6 -8,-8V32C24,27.6 27.6,24 32,24z" />
+    <!-- Display Bar -->
+    <path
+        android:fillColor="#E2E8F0"
+        android:pathData="M32,32h44c2.2,0 4,1.8 4,4v8c0,2.2 -1.8,4 -4,4H32c-2.2,0 -4,-1.8 -4,-4v-8C28,33.8 29.8,32 32,32z" />
+    <!-- Keypad Dots / Buttons -->
+    <path
+        android:fillColor="#0D9488"
+        android:pathData="M35,54h8c1.1,0 2,0.9 2,2v4c0,1.1 -0.9,2 -2,2h-8c-1.1,0 -2,-0.9 -2,-2v-4C33,54.9 33.9,54 35,54z" />
+    <path
+        android:fillColor="#0D9488"
+        android:pathData="M50,54h8c1.1,0 2,0.9 2,2v4c0,1.1 -0.9,2 -2,2h-8c-1.1,0 -2,-0.9 -2,-2v-4C48,54.9 48.9,54 50,54z" />
+    <path
+        android:fillColor="#0D9488"
+        android:pathData="M65,54h8c1.1,0 2,0.9 2,2v4c0,1.1 -0.9,2 -2,2h-8c-1.1,0 -2,-0.9 -2,-2v-4C63,54.9 63.9,54 65,54z" />
+    <path
+        android:fillColor="#0D9488"
+        android:pathData="M35,66h8c1.1,0 2,0.9 2,2v4c0,1.1 -0.9,2 -2,2h-8c-1.1,0 -2,-0.9 -2,-2v-4C33,66.9 33.9,66 35,66z" />
+    <path
+        android:fillColor="#0D9488"
+        android:pathData="M50,66h8c1.1,0 2,0.9 2,2v4c0,1.1 -0.9,2 -2,2h-8c-1.1,0 -2,-0.9 -2,-2v-4C48,66.9 48.9,66 50,66z" />
+    <!-- Accent equal/calc key -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M65,66h8c1.1,0 2,0.9 2,2v4c0,1.1 -0.9,2 -2,2h-8c-1.1,0 -2,-0.9 -2,-2v-4C63,66.9 63.9,66 65,66z" />
+</vector>

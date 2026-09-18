@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">MFS চার্জ ক্যালকুলেটর</string>
+    <string name="app_subtitle">ব্যক্তিগত একাউন্ট ব্যবসায়িক চার্জিং পদ্ধতি</string>
+    
+    <string name="menu_cashout_charge">ক্যাশআউট চার্জ</string>
+    <string name="menu_about_developer">ডেভেলপার সম্পর্কে</string>
+    <string name="menu_language">Language / ভাষা</string>
+    
+    <string name="select_mfs">MFS নির্বাচন করুন</string>
+    <string name="your_amount">আপনার পরিমাণ</string>
+    <string name="cashout_charge">ক্যাশআউট চার্জ</string>
+    <string name="send_money_fee">সেন্ড মানি ফি</string>
+    <string name="total_customer_pays">গ্রাহক মোট প্রদান করবে</string>
+    <string name="copy_total">মোট কপি করুন</string>
+    <string name="copied">কপি হয়েছে ✓</string>
+    <string name="reset">রিসেট</string>
+    <string name="calculation_history">হিসাবের ইতিহাস</string>
+    <string name="clear_history">ইতিহাস মুছুন</string>
+    <string name="clear_history_confirm_title">ইতিহাস মুছবেন?</string>
+    <string name="clear_history_confirm_message">আপনি কি সমস্ত সংরক্ষিত হিসাব মুছে ফেলতে চান? এটি আর ফিরিয়ে আনা যাবে না।</string>
+    
+    <string name="about_developer">ডেভেলপার সম্পর্কে</string>
+    <string name="developed_by">Developed by Musabber Himel</string>
+    <string name="about_app_description">বাংলাদেশে ব্যক্তিগত MFS অ্যাকাউন্ট ব্যবহারকারী ক্ষুদ্র ব্যবসার জন্য একটি দ্রুত ও সম্পূর্ণ অফলাইন ফিনটেক অ্যাপ।</string>
+    
+    <string name="language">ভাষা</string>
+    <string name="settings">সেটিংস</string>
+    <string name="rate">রেট</string>
+    <string name="rate_per_1000">রেট (প্রতি ১,০০০ টাকায়)</string>
+    <string name="save">সংরক্ষণ করুন</string>
+    <string name="cancel">বাতিল</string>
+    <string name="confirm">নিশ্চিত করুন</string>
+    <string name="delete">মুছুন</string>
+    <string name="restore_defaults">ডিফল্ট পুনরুদ্ধার করুন</string>
+    <string name="restore_defaults_confirm">সকল MFS চার্জিং রেট এবং ফি আদি অবস্থায় ফিরিয়ে নেবেন?</string>
+    
+    <string name="theme_title">থিম মোড</string>
+    <string name="theme_light">লাইট</string>
+    <string name="theme_dark">ডার্ক</string>
+    <string name="theme_system">সিস্টেম ডিফল্ট</string>
+    
+    <string name="no_history">কোনো হিসাবের ইতিহাস নেই</string>
+    <string name="no_history_sub">আপনার সাম্প্রতিক হিসাবগুলো এখানে স্বয়ংক্রিয়ভাবে জমা হবে।</string>
+    <string name="invalid_amount">ভুল পরিমাণ</string>
+    <string name="clear">ক্লিয়ার</string>
+    <string name="back">ফিরে যান</string>
+</resources>

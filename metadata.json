@@ -1,0 +1,6 @@
+{
+  "name": "MFS Charge Calculator",
+  "description": "Native Android application for Bangladeshi small businesses to calculate MFS customer charges and send-money fees.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
