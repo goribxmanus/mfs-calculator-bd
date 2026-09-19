@@ -152,7 +152,7 @@ export const AndroidProjectHub: React.FC = () => {
             </div>
             <button
               onClick={() => copyCommand(cmd)}
-              className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+              className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
             >
               {copiedCmd === cmd ? (
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -162,6 +162,167 @@ export const AndroidProjectHub: React.FC = () => {
             </button>
           </div>
         ))}
+      </div>
+
+      {/* Comprehensive How-To-Build APK Guide */}
+      <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Terminal className="w-4 h-4 text-teal-400" />
+            <h3 className="text-sm font-bold text-white">
+              How to Build the APK File (3 Simple Methods)
+            </h3>
+          </div>
+          <span className="text-[10px] font-semibold text-teal-400 bg-teal-950/70 border border-teal-800/60 px-2 py-0.5 rounded-full">
+            Ready to Compile
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {/* Method 1 */}
+          <div className="p-3.5 bg-slate-900/90 rounded-xl border border-slate-800/80 space-y-2">
+            <div className="flex items-center space-x-2">
+              <span className="w-5 h-5 rounded-full bg-teal-500/20 text-teal-300 text-xs font-bold flex items-center justify-center">1</span>
+              <span className="text-xs font-bold text-slate-200">Android Studio (GUI)</span>
+            </div>
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Standard local build using Android Studio.
+            </p>
+            <ol className="text-[11px] text-slate-300 space-y-1 list-decimal list-inside leading-relaxed">
+              <li>Click <strong>Download Android Studio ZIP</strong> above.</li>
+              <li>Extract and open the folder in <strong>Android Studio</strong>.</li>
+              <li>Go to top menu: <code className="text-teal-300 bg-slate-950 px-1 py-0.5 rounded">Build &gt; Build Bundle(s) / APK(s) &gt; Build APK(s)</code>.</li>
+              <li>Click <strong>locate</strong> in the bottom-right popup to get your <code className="text-emerald-400 font-mono">app-debug.apk</code>!</li>
+            </ol>
+          </div>
+
+          {/* Method 2 */}
+          <div className="p-3.5 bg-slate-900/90 rounded-xl border border-slate-800/80 space-y-2">
+            <div className="flex items-center space-x-2">
+              <span className="w-5 h-5 rounded-full bg-teal-500/20 text-teal-300 text-xs font-bold flex items-center justify-center">2</span>
+              <span className="text-xs font-bold text-slate-200">Local Terminal (CLI)</span>
+            </div>
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Compile with the Gradle Wrapper and JDK 17.
+            </p>
+            <div className="text-[11px] text-slate-300 space-y-1.5 leading-relaxed">
+              <div>On Mac / Linux:</div>
+              <code className="block bg-slate-950 p-1.5 rounded text-teal-300 font-mono text-[10px]">
+                chmod +x gradlew<br />./gradlew assembleDebug
+              </code>
+              <div>On Windows:</div>
+              <code className="block bg-slate-950 p-1.5 rounded text-teal-300 font-mono text-[10px]">
+                gradlew.bat assembleDebug
+              </code>
+              <div className="text-slate-400 text-[10px] mt-1">
+                Output: <span className="text-emerald-400 font-mono">app/build/outputs/apk/debug/app-debug.apk</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Method 3 */}
+          <div className="p-3.5 bg-teal-950/30 rounded-xl border border-teal-800/60 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="w-5 h-5 rounded-full bg-teal-500/30 text-teal-300 text-xs font-bold flex items-center justify-center">3</span>
+                <span className="text-xs font-bold text-teal-200">GitHub Actions (Cloud)</span>
+              </div>
+              <span className="text-[9px] font-bold text-emerald-400 bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-800/60">No PC required</span>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              Compiles in the cloud via GitHub Actions automatically!
+            </p>
+            <ol className="text-[11px] text-slate-200 space-y-1 list-decimal list-inside leading-relaxed">
+              <li>Create a new repository on <strong>github.com</strong>.</li>
+              <li>Push or upload this project (with <code className="text-teal-300 bg-slate-950 px-1 rounded">.github/</code>).</li>
+              <li>Open the <strong>Actions</strong> tab on your GitHub repository.</li>
+              <li>Click the completed run to download the ready <code className="text-emerald-400 font-mono">.apk</code> artifact!</li>
+            </ol>
+          </div>
+        </div>
+
+        {/* GitHub Actions Detailed Step-by-Step Box */}
+        <div className="p-4 bg-slate-900/95 rounded-xl border border-slate-800 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <span className="text-xs font-bold text-white">
+                🐙 GitHub Cloud Build File: <code className="text-teal-400 font-mono text-[11px]">.github/workflows/build-apk.yml</code>
+              </span>
+            </div>
+            <button
+              onClick={() => {
+                const yml = `name: Build Android APK
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & Generate APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - run: chmod +x gradlew
+      - run: ./gradlew assembleDebug assembleRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MFS-Charge-Calculator-Debug-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MFS-Charge-Calculator-Release-APK
+          path: app/build/outputs/apk/release/app-release.apk`;
+                copyCommand(yml);
+              }}
+              className="flex items-center space-x-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg border border-slate-700 transition cursor-pointer"
+            >
+              {copiedCmd?.startsWith('name: Build Android APK') ? (
+                <>
+                  <Check className="w-3 h-3 text-emerald-400" />
+                  <span className="text-emerald-400">Copied Workflow YAML</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3" />
+                  <span>Copy GitHub Actions YAML</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-[11px]">
+            <div className="p-2.5 bg-slate-950 rounded-lg border border-slate-800/80">
+              <strong className="text-slate-200 block mb-1">Step 1: Create Repo</strong>
+              <span className="text-slate-400">Go to <code className="text-teal-300">github.com/new</code> and create a public or private repository.</span>
+            </div>
+            <div className="p-2.5 bg-slate-950 rounded-lg border border-slate-800/80">
+              <strong className="text-slate-200 block mb-1">Step 2: Upload / Push</strong>
+              <span className="text-slate-400">Push with git or upload files directly through GitHub&apos;s web uploader.</span>
+            </div>
+            <div className="p-2.5 bg-slate-950 rounded-lg border border-slate-800/80">
+              <strong className="text-slate-200 block mb-1">Step 3: Auto-Compile</strong>
+              <span className="text-slate-400">GitHub spins up a Linux runner with JDK 17 and compiles both Debug &amp; Release APKs in ~2 minutes.</span>
+            </div>
+            <div className="p-2.5 bg-slate-950 rounded-lg border border-slate-800/80">
+              <strong className="text-slate-200 block mb-1">Step 4: Download APK</strong>
+              <span className="text-slate-400">Go to <strong>Actions &gt; Build &amp; Generate APK &gt; Artifacts</strong> and download the APK zip!</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Installation info banner */}
+        <div className="p-3 bg-teal-950/40 rounded-xl border border-teal-900/60 flex items-start space-x-2.5 text-xs text-teal-200">
+          <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+          <div className="leading-relaxed">
+            <strong className="text-white">How to install the APK on your Android phone:</strong> Transfer the generated <code className="bg-teal-900/60 px-1 rounded text-white font-mono">app-debug.apk</code> to your device (via USB cable, Google Drive, WhatsApp, or Telegram). Tap the file in your phone&apos;s file manager, select <em>&quot;Allow installation from this source&quot;</em> if prompted, and tap <strong>Install</strong>.
+          </div>
+        </div>
       </div>
 
       {/* File Inspector */}

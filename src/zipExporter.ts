@@ -54,6 +54,99 @@ include(":app")`
 }`
   },
   {
+    path: 'gradle/wrapper/gradle-wrapper.properties',
+    category: 'build',
+    content: `distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+distributionUrl=https\\://services.gradle.org/distributions/gradle-8.9-bin.zip
+networkTimeout=10000
+validateDistributionUrl=true
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists`
+  },
+  {
+    path: 'gradlew',
+    category: 'build',
+    content: `#!/bin/sh
+# Gradle start up script for POSIX
+app_path=$0
+while [ -h "$app_path" ]; do
+    ls=\`ls -ld "$app_path"\`
+    link=\`expr "$ls" : '.*-> \\(.*\\)$'\`
+    if expr "$link" : '/.*' > /dev/null; then
+        app_path="$link"
+    else
+        app_path=\`dirname "$app_path"\`"/$link"
+    fi
+done
+APP_BASE_NAME=\`basename "$0"\`
+APP_HOME=\`cd "\`dirname \"$app_path\"\`" > /dev/null && pwd\`
+DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
+CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
+if [ -n "$JAVA_HOME" ] ; then
+    JAVACMD=$JAVA_HOME/bin/java
+else
+    JAVACMD=java
+fi
+eval set -- "$DEFAULT_JVM_OPTS" "$JAVA_OPTS" "$GRADLE_OPTS" "\\"-Dorg.gradle.appname=$APP_BASE_NAME\\"" -classpath "\\"\\$CLASSPATH\\"" org.gradle.wrapper.GradleWrapperMain "$@"
+exec "$JAVACMD" "$@"`
+  },
+  {
+    path: 'gradlew.bat',
+    category: 'build',
+    content: `@rem Gradle startup script for Windows
+@if "%DEBUG%"=="" @echo off
+if "%OS%"=="Windows_NT" setlocal
+set DIRNAME=%~dp0
+if "%DIRNAME%"=="" set DIRNAME=.
+set APP_BASE_NAME=%~n0
+set APP_HOME=%DIRNAME%
+set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
+if defined JAVA_HOME goto findJavaFromJavaHome
+set JAVA_EXE=java.exe
+goto execute
+:findJavaFromJavaHome
+set JAVA_HOME=%JAVA_HOME:"=%
+set JAVA_EXE=%JAVA_HOME%/bin/java.exe
+:execute
+set CLASSPATH=%APP_HOME%\\gradle\\wrapper\\gradle-wrapper.jar
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %*
+:end
+if "%OS%"=="Windows_NT" endlocal`
+  },
+  {
+    path: '.github/workflows/build-apk.yml',
+    category: 'build',
+    content: `name: Build Android APK
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & Generate APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - run: chmod +x gradlew
+      - run: ./gradlew assembleDebug
+      - run: ./gradlew assembleRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MFS-Charge-Calculator-Debug-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MFS-Charge-Calculator-Release-APK
+          path: app/build/outputs/apk/release/app-release.apk`
+  },
+  {
     path: 'gradle/libs.versions.toml',
     category: 'build',
     content: `[versions]
