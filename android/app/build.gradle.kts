@@ -24,13 +24,13 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug") // Allows direct installation of release build for testing
+            signingConfig = signingConfigs.findByName("debug")
         }
         debug {
             applicationIdSuffix = ".debug"
