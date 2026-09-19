@@ -17,29 +17,34 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: |
-          if [ -f "gradlew" ]; then
-            chmod +x gradlew
-          fi
-          if [ -f "android/gradlew" ]; then
-            chmod +x android/gradlew
-          fi
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
 
-      - name: Build APKs with Gradle
+      - name: Accept Android SDK Licenses & Initialize Wrapper
         run: |
-          if [ -f "gradlew" ]; then
-            ./gradlew assembleDebug assembleRelease
-          elif [ -f "android/gradlew" ]; then
-            cd android && ./gradlew assembleDebug assembleRelease
+          yes | sdkmanager --licenses 2>/dev/null || true
+          if [ -d "android" ] && [ ! -f "settings.gradle.kts" ]; then
+            cd android
+          fi
+          gradle wrapper --gradle-version 8.9 --distribution-type bin || true
+          chmod +x gradlew || true
+
+      - name: Build Debug & Release APKs
+        run: |
+          if [ -d "android" ] && [ ! -f "settings.gradle.kts" ]; then
+            cd android
+          fi
+          if [ -f "./gradlew" ] && [ -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+            ./gradlew assembleDebug assembleRelease --no-daemon --stacktrace
           else
-            echo "Gradle wrapper not found!" && exit 1
+            gradle assembleDebug assembleRelease --no-daemon --stacktrace
           fi
 
       - name: Upload Debug APK Artifact
@@ -49,7 +54,7 @@ jobs:
           path: |
             **/build/outputs/apk/debug/app-debug.apk
             **/build/outputs/apk/debug/*.apk
-          if-no-files-found: warn
+          if-no-files-found: error
 
       - name: Upload Release APK Artifact
         uses: actions/upload-artifact@v4

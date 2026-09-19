@@ -252,8 +252,11 @@ export const AndroidProjectHub: React.FC = () => {
             <button
               onClick={() => {
                 const yml = `name: Build Android APK
+
 on:
   push:
+    branches: [ main, master ]
+  pull_request:
     branches: [ main, master ]
   workflow_dispatch:
 
@@ -261,23 +264,49 @@ jobs:
   build:
     name: Build & Generate APK
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
-      - run: chmod +x gradlew
-      - run: ./gradlew assembleDebug assembleRelease
-      - uses: actions/upload-artifact@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Accept Android SDK Licenses & Initialize Wrapper
+        run: |
+          yes | sdkmanager --licenses 2>/dev/null || true
+          gradle wrapper --gradle-version 8.9 --distribution-type bin || true
+          chmod +x gradlew || true
+
+      - name: Build Debug & Release APKs
+        run: |
+          if [ -f "./gradlew" ] && [ -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+            ./gradlew assembleDebug assembleRelease --no-daemon --stacktrace
+          else
+            gradle assembleDebug assembleRelease --no-daemon --stacktrace
+          fi
+
+      - name: Upload Debug APK Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: MFS-Charge-Calculator-Debug-APK
           path: app/build/outputs/apk/debug/app-debug.apk
-      - uses: actions/upload-artifact@v4
+          if-no-files-found: error
+
+      - name: Upload Release APK Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: MFS-Charge-Calculator-Release-APK
-          path: app/build/outputs/apk/release/app-release.apk`;
+          path: app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: warn`;
                 copyCommand(yml);
               }}
               className="flex items-center space-x-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg border border-slate-700 transition cursor-pointer"
