@@ -275,6 +275,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Setup Android SDK Platforms
+        run: |
+          yes | sdkmanager --licenses 2>/dev/null || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" 2>/dev/null || true
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -282,41 +287,44 @@ jobs:
 
       - name: Accept Android SDK Licenses & Initialize Wrapper
         run: |
-          yes | sdkmanager --licenses 2>/dev/null || true
+          if [ -d "android" ] && [ ! -f "settings.gradle.kts" ]; then
+            cd android
+          fi
           gradle wrapper --gradle-version 8.9 --distribution-type bin || true
           chmod +x gradlew || true
 
       - name: Build Debug APK
         run: |
+          if [ -d "android" ] && [ ! -f "settings.gradle.kts" ]; then
+            cd android
+          fi
+          set -o pipefail
           if [ -f "./gradlew" ]; then
-            ./gradlew assembleDebug --no-daemon --stacktrace
+            ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee build.log
           else
-            gradle assembleDebug --no-daemon --stacktrace
+            gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee build.log
           fi
 
-      - name: Build Release APK (Optional)
-        continue-on-error: true
+      - name: Surface Failure Logs if Build Fails
+        if: failure()
         run: |
-          if [ -f "./gradlew" ]; then
-            ./gradlew assembleRelease --no-daemon --stacktrace || true
-          else
-            gradle assembleRelease --no-daemon --stacktrace || true
+          echo "## ❌ Android Gradle Build Failed" >> $GITHUB_STEP_SUMMARY
+          echo '\`\`\`text' >> $GITHUB_STEP_SUMMARY
+          if [ -f "build.log" ]; then
+            tail -n 120 build.log >> $GITHUB_STEP_SUMMARY
+          elif [ -f "android/build.log" ]; then
+            tail -n 120 android/build.log >> $GITHUB_STEP_SUMMARY
           fi
+          echo '\`\`\`' >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: MFS-Charge-Calculator-Debug-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
-
-      - name: Upload Release APK Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: MFS-Charge-Calculator-Release-APK
-          path: app/build/outputs/apk/release/app-release.apk
-          if-no-files-found: warn`;
+          path: |
+            **/build/outputs/apk/debug/app-debug.apk
+            **/build/outputs/apk/debug/*.apk
+          if-no-files-found: error`;
                 copyCommand(yml);
               }}
               className="flex items-center space-x-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg border border-slate-700 transition cursor-pointer"
