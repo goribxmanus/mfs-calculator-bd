@@ -81,8 +81,7 @@ fun TopAppBarWithMenu(
         actions = {
             // Separate small, unobtrusive Settings (gear icon)
             IconButton(
-                onClick = onNavigateToSettings,
-                contentDescription = stringResource(id = R.string.settings)
+                onClick = onNavigateToSettings
             ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
@@ -93,8 +92,7 @@ fun TopAppBarWithMenu(
 
             // Corner Menu Button
             IconButton(
-                onClick = { menuExpanded = true },
-                contentDescription = "Menu"
+                onClick = { menuExpanded = true }
             ) {
                 Icon(
                     imageVector = Icons.Default.Menu,

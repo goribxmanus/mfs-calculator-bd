@@ -74,7 +74,7 @@ class UserPreferencesRepository(private val context: Context) {
 
             val selectedMfsId = try {
                 MfsId.valueOf(mfsStr)
-            } catch (_: Exception) {
+            } catch (e: Exception) {
                 MfsId.BKASH
             }
 
